@@ -7,6 +7,10 @@ defmodule Eegis.ThisApp do
     ThisApp.init(:ok)
   end
 
+  def chiama do
+    "si"
+  end
+
   ## Defining GenServer Callbacks
 
   @impl true
