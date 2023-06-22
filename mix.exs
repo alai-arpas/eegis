@@ -9,9 +9,18 @@ defmodule Eegis.MixProject do
       version: @version,
       description: description(),
       package: package(),
+      docs: docs(),
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
       deps: deps()
+    ]
+  end
+
+  defp docs do
+    [
+      main: "Eegis",
+      source_ref: "v#{@version}",
+      source_url: "https://github.com/alai-arpas/eegis"
     ]
   end
 
@@ -27,6 +36,8 @@ defmodule Eegis.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:ex_doc, "~> 0.29", only: :dev, runtime: false},
+      {:makeup_eex, ">= 0.1.1", only: :docs}
       # {:dep_from_hexpm, "~> 0.3.0"},
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
     ]
