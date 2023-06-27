@@ -4,7 +4,7 @@ defmodule Eegis.Application do
 
   def start(_type, _args) do
     children = [
-      Eegis.ThisApp
+      Eegis.Agol
     ]
 
     opts = [strategy: :one_for_one, name: Eegis.Supervisor]

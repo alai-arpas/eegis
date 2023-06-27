@@ -30,14 +30,25 @@ defmodule Eegis.MixProject do
 
   # Run "mix help compile.app" to learn about applications.
   def application do
-    [mod: {Eegis.Application, []}, extra_applications: [:logger]]
+    [
+      mod: {Eegis.Application, []},
+      extra_applications: [:logger],
+      env: [
+        url_esri_token: "https://www.arcgis.com/sharing/rest/oauth2/token",
+        expiration: 21600,
+        app_users: %{}
+      ]
+    ]
   end
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
       {:ex_doc, "~> 0.29", only: :dev, runtime: false},
-      {:makeup_eex, ">= 0.1.1", only: :docs}
+      {:makeup_eex, ">= 0.1.1", only: :docs},
+      {:finch, "~> 0.13"},
+      {:req, "~> 0.3.9"}
+
       # {:dep_from_hexpm, "~> 0.3.0"},
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
     ]
