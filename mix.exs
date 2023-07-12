@@ -1,7 +1,7 @@
 defmodule Eegis.MixProject do
   use Mix.Project
 
-  @version "0.1.3"
+  @version File.read!("VERSION")
 
   def project do
     [
@@ -10,7 +10,7 @@ defmodule Eegis.MixProject do
       description: description(),
       package: package(),
       docs: docs(),
-      elixir: "~> 1.14",
+      elixir: "~> 1.15",
       start_permanent: Mix.env() == :prod,
       deps: deps()
     ]
@@ -25,7 +25,7 @@ defmodule Eegis.MixProject do
   end
 
   defp description do
-    "Pre alpha - to do"
+    "Elixir client"
   end
 
   # Run "mix help compile.app" to learn about applications.
@@ -35,8 +35,7 @@ defmodule Eegis.MixProject do
       extra_applications: [:logger],
       env: [
         url_esri_token: "https://www.arcgis.com/sharing/rest/oauth2/token",
-        expiration: 21600,
-        app_users: %{}
+        expiration: 21600
       ]
     ]
   end
@@ -47,7 +46,9 @@ defmodule Eegis.MixProject do
       {:ex_doc, "~> 0.29", only: :dev, runtime: false},
       {:makeup_eex, ">= 0.1.1", only: :docs},
       {:finch, "~> 0.13"},
-      {:req, "~> 0.3.9"}
+      {:req, "~> 0.3.9"},
+      {:httpoison, "~> 1.8"},
+      {:poison, "~> 3.1"}
 
       # {:dep_from_hexpm, "~> 0.3.0"},
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}

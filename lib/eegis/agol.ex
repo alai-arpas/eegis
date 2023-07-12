@@ -3,7 +3,7 @@ defmodule Eegis.Agol do
 
   @name __MODULE__
 
-  ## CLIENT
+  ###########       CLIENT       ############################
   def start_link(_opts) do
     GenServer.start_link(__MODULE__, app_env(), name: @name)
   end
@@ -27,7 +27,7 @@ defmodule Eegis.Agol do
     Map.get(users, utente, :not_found)
   end
 
-  ## SERVER
+  ###########       SERVER       ############################
   @impl true
   def init(_opts) do
     {:ok, app_env()}
