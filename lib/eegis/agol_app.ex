@@ -3,25 +3,20 @@ defmodule Eegis.AgolApp do
   Agol application
   """
 
-  @type anapp :: Atom
-  @type auser :: Atom
-
-  @callback init_app(app :: anapp, user :: auser) :: Atom
+  @callback app_name :: atom()
 
   defmacro __using__(_opts) do
     quote do
       @behaviour unquote(__MODULE__)
       import unquote(__MODULE__)
 
-      def stringa do
-        "In Myb"
-      end
+      def app_name, do: :my_app_name
 
-      def prova do
-        "prova"
-      end
+      @doc """
+      TODO da prevedere errori
+      """
 
-      defoverridable prova: 0, stringa: 0
+      defoverridable app_name: 0
     end
   end
 end
