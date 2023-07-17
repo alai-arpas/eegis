@@ -1,7 +1,7 @@
 defmodule Eegis.MixProject do
   use Mix.Project
 
-  @version File.read!("VERSION")
+  @version "0.1.5"
 
   def project do
     [
