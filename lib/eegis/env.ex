@@ -2,6 +2,7 @@ defmodule Eegis.Env do
   @doc """
   Restituisce una keyword list
   """
+
   def all, do: Application.get_all_env(:eegis)
   def keys, do: all() |> Keyword.keys()
 
