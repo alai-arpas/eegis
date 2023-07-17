@@ -1,5 +1,8 @@
+FILE=VERSION
+versione=`cat $(FILE)`
+
 pub:
 	mix hex.build
-	git tag -a "v0.1.6" -m "v0.1.6"
-	git push origin "v0.1.6"
+	git tag -a $(ver) -m (ver)
+	git push origin $(ver)
 	mix hex.publish

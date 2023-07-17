@@ -24,6 +24,7 @@ config :eegis,
       features_usr_srv: %{
         {:alai, :arpas} => %{
           carg_539_campioni: %{nome: "MOGORO_539", numero: 1},
+          carg_539_igm: %{nome: "MOGORO_539", numero: 3},
           carg_539_legenda: %{nome: "MOGORO_539", numero: 4}
         },
         {:guest, :esri_lab} => %{

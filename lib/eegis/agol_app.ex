@@ -58,14 +58,22 @@ defmodule Eegis.AgolApp do
         Map.get(get_features_desc(), atom_name)
       end
 
-      def get_a_feature(atom_name, _query \\ "where=1=1") do
+      def get_a_feature(atom_name, fields \\ "*", where \\ "1=1") do
         desc = get_a_feature_desc(atom_name)
         fs = Map.get(desc, :feature_srv)
         nome = Map.get(desc, :nome)
         numero = Map.get(desc, :numero)
-        url = "#{fs}arcgis/rest/services/#{nome}/#{numero}"
+        headers = Map.get(desc, :headers)
+        stringa_headers = "token=" <> Map.get(headers, :token)
+        url = "#{fs}arcgis/rest/services/#{nome}/FeatureServer/#{numero}/query"
         {:ok, uri} = URI.new(url)
+
         uri
+        |> URI.append_query("where=" <> where)
+        |> URI.append_query("outFields=" <> fields)
+        |> URI.append_query("f=pjson")
+        |> URI.append_query(stringa_headers)
+        |> URI.to_string()
       end
 
       def get_usr_srv() do
