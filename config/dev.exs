@@ -23,11 +23,11 @@ config :eegis,
     carg_539: %{
       features_usr_srv: %{
         {:alai, :arpas} => %{
-          carg_539_campioni: [nome: "MOGORO_539", numero: 1],
-          carg_539_legenda: [nome: "MOGORO_539", numero: 4]
+          carg_539_campioni: %{nome: "MOGORO_539", numero: 1},
+          carg_539_legenda: %{nome: "MOGORO_539", numero: 4}
         },
         {:guest, :esri_lab} => %{
-          lsgv1: [nome: "Live_Stream_Gauges_v1", numero: 0]
+          lsgv1: %{nome: "Live_Stream_Gauges_v1", numero: 0}
         }
       }
     },
