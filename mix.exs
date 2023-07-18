@@ -1,7 +1,7 @@
 defmodule Eegis.MixProject do
   use Mix.Project
 
-  @version "0.1.8"
+  @version "0.1.9"
 
   def project do
     [
@@ -12,7 +12,8 @@ defmodule Eegis.MixProject do
       docs: docs(),
       elixir: "~> 1.15",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      aliases: aliases()
     ]
   end
 
@@ -59,6 +60,12 @@ defmodule Eegis.MixProject do
     [
       licenses: ["MIT"],
       links: %{"GitHub" => "https://github.com/alai-arpas/eegis"}
+    ]
+  end
+
+  defp aliases do
+    [
+      wv: ["eegis -b"]
     ]
   end
 end

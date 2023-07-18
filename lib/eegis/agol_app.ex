@@ -35,15 +35,15 @@ defmodule Eegis.AgolApp do
         fs = Map.get(dato, :feature_srv)
         dtoken = Map.get(dato, :token)
 
-        headers =
+        attrs =
           if dtoken do
-            %{:token => Map.get(dtoken, "access_token")}
+            %{"token=" => Map.get(dtoken, "access_token")}
           else
             %{}
           end
 
         Map.put(desc_feature, :feature_srv, fs)
-        |> Map.put(:headers, headers)
+        |> Map.put(:attrs, attrs)
       end
 
       def get_features_desc() do
@@ -58,22 +58,41 @@ defmodule Eegis.AgolApp do
         Map.get(get_features_desc(), atom_name)
       end
 
-      def get_a_feature(atom_name, fields \\ "*", where \\ "1=1") do
+      def url_string(url, params) do
+        {:ok, uri} = URI.new(url)
+
+        parametri =
+          params
+          |> Enum.map(fn {k, v} -> k <> v end)
+          |> Enum.join("&")
+
+        URI.append_query(uri, parametri)
+        |> URI.to_string()
+      end
+
+      def get_a_feature(atom_name, attrs \\ %{}) do
+        default = %{"outFields=" => "*", "f=" => "pjson", "where=" => "1=1"}
+
         desc = get_a_feature_desc(atom_name)
+
+        headers = Map.get(desc, :attrs)
+        params = Map.merge(default, attrs)
+        params = Map.merge(params, headers)
+
         fs = Map.get(desc, :feature_srv)
         nome = Map.get(desc, :nome)
         numero = Map.get(desc, :numero)
-        headers = Map.get(desc, :headers)
-        stringa_headers = "token=" <> Map.get(headers, :token)
-        url = "#{fs}arcgis/rest/services/#{nome}/FeatureServer/#{numero}/query"
-        {:ok, uri} = URI.new(url)
 
-        uri
-        |> URI.append_query("where=" <> where)
-        |> URI.append_query("outFields=" <> fields)
-        |> URI.append_query("f=pjson")
-        |> URI.append_query(stringa_headers)
-        |> URI.to_string()
+        url = "#{fs}arcgis/rest/services/#{nome}/FeatureServer/#{numero}/query"
+        stringa_url = url_string(url, params)
+
+        IO.inspect(stringa_url, label: "url")
+
+        {:ok, response} = Req.get(stringa_url)
+
+        features = Map.get(response.body, "features")
+        fields = Map.get(response.body, "fields")
+        {features, fields}
       end
 
       def get_usr_srv() do

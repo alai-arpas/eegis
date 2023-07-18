@@ -7,9 +7,7 @@ defmodule Mix.Tasks.Eegis do
   Prints Eegis tasks and their information.
       $ mix eegis
   To print the Eegis version, pass `-v` or `--version`, for example:
-      $ mix phx --version
-  To print the Eegis version, pass `-v` or `--version`, for example:
-      $ mix eegis --bump
+      $ mix eegis --version
   """
 
   @version Mix.Project.config()[:version]
@@ -22,8 +20,11 @@ defmodule Mix.Tasks.Eegis do
 
   @impl true
   @doc false
-  def run([opzione]) when opzione in ~w(-b --bump) do
-    Mix.shell().info("bump Eegis v#{@version}")
+  def run([opzione]) when opzione in ~w(-awv --allinea) do
+    old = File.read!("VERSION")
+    new_version = "v#{@version}"
+    File.write!("VERSION", new_version)
+    Mix.shell().info("VERSION era #{old} -> Eegis #{new_version}")
   end
 
   @impl true
@@ -45,7 +46,7 @@ defmodule Mix.Tasks.Eegis do
     Mix.shell().info("Eegis v#{Application.spec(:eegis, :vsn)}")
     Mix.shell().info("\n## Options\n")
     Mix.shell().info("-v, --version        # Prints     Eegis version\n")
-    Mix.shell().info("-b, --bump           # Incrementa Eegis version\n")
+    Mix.shell().info("-awv DO NOT USE      # Allinea    Eegis version\n")
     Mix.Tasks.Help.run(["--search", "phx."])
   end
 end
