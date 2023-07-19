@@ -24,6 +24,7 @@ defmodule Mix.Tasks.Eegis do
     old = File.read!("VERSION")
     new_version = "v#{@version}"
     File.write!("VERSION", new_version)
+    modifica_readme(old)
     Mix.shell().info("VERSION era #{old} -> Eegis #{new_version}")
   end
 
@@ -48,5 +49,13 @@ defmodule Mix.Tasks.Eegis do
     Mix.shell().info("-v, --version        # Prints     Eegis version\n")
     Mix.shell().info("-awv DO NOT USE      # Allinea    Eegis version\n")
     Mix.Tasks.Help.run(["--search", "phx."])
+  end
+
+  defp modifica_readme(da_version) do
+    v_elimnata = String.slice(da_version, 1, 50)
+    con_readme = File.read!("README.md")
+    new_version = String.replace(con_readme, v_elimnata, @version)
+    File.write!("README.md", new_version)
+    Mix.shell().info("Modificato README.md")
   end
 end
