@@ -91,8 +91,9 @@ defmodule Eegis.AgolApp do
         {:ok, response} = Req.get(stringa_url)
 
         features = Map.get(response.body, "features")
+        solo_attributi = Enum.map(features, fn v -> Map.get(v, "attributes") end)
         fields = Map.get(response.body, "fields")
-        {features, fields}
+        {solo_attributi, fields}
       end
 
       def get_usr_srv() do
