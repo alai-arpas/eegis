@@ -4,6 +4,7 @@ defmodule Eegis.AgolApp do
   """
   alias Eegis.Env
   alias Eegis.AgolAutorizza, as: AgolAuth
+  alias Eegis.HttpRequest, as: HttpReq
 
   @callback app_name :: atom()
 
@@ -14,8 +15,10 @@ defmodule Eegis.AgolApp do
 
       def app_name, do: :my_app_name
 
-      @doc """
-      """
+      defp downcase(mappa) do
+        mappa
+        |> Enum.map(fn {k, v} -> {String.downcase(k), v} end)
+      end
 
       def features_usr_srv, do: Env.app(app_name())[:features_usr_srv]
       # uno
@@ -68,6 +71,22 @@ defmodule Eegis.AgolApp do
 
         URI.append_query(uri, parametri)
         |> URI.to_string()
+      end
+
+      def update_features(atom_name, features \\ %{}) do
+        desc = get_a_feature_desc(atom_name)
+
+        params = %{"f" => "pjson"}
+        headers = Map.get(desc, :attrs)
+        token = Map.get(headers, "token=")
+        params = Map.merge(params, %{"token" => token})
+
+        fs = Map.get(desc, :feature_srv)
+        nome = Map.get(desc, :nome)
+        numero = Map.get(desc, :numero)
+
+        url = "#{fs}arcgis/rest/services/#{nome}/FeatureServer/#{numero}/updateFeatures"
+        HttpReq.post_request(url, params, features)
       end
 
       def get_a_feature(atom_name, attrs \\ %{}) do

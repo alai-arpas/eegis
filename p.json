@@ -1,0 +1,11 @@
+{
+    "updates": [
+        {
+            "attributes": {
+                "OBJECTID": 1,
+                "SIGLA": "H1M_ANDREA",
+            }
+        }
+    ]
+}
+// [{%22attributes%22:%20{%22OBJECTID%22:%201,%22SIGLA%22:%20%22H1M_ANDREA%22}}]
