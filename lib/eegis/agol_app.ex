@@ -1,48 +1,52 @@
 defmodule Eegis.AgolApp do
   @moduledoc """
-  Agol application: definisce le funzioni necessarie.
+  Definisce le funzioni necessarie per una applicazione
+  Agol(ArcGis On Line)
 
   Nell'applicazione client inserire:
-      use `Eegis.AgolApp`
+      use Eegis.AgolApp
 
-  e sovrascrivere col nome dell'applicazione
+  e sovrascrivere il nome dell'applicazione
 
       def app_name, do: :nome_applicazione
 
-  Il nome dell'applicazione viene anche definito in config/*.exs files
+  Il nome dell'applicazione viene configurato in config/*.exs files
   """
 
   alias Eegis.Env
   alias Eegis.AgolAutorizza, as: AgolAuth
   alias Eegis.HttpRequest, as: HttpReq
 
+  @doc """
+  Da sovrascrivere nell'applicazione client:
+      def app_name, do: :carg_539
+
+  Vedi applicazione esempio in `Eegis.ClientExample.AppCarg539`
+  """
   @callback app_name :: atom()
+
+  @doc """
+  Estrae da config/*.exs per l'applicazione corrente(appname()) `:features_usr_srv`
+      %{
+        {:alai, :arpas} => %{
+          carg_539_campioni: %{nome: "MOGORO_539", numero: 1},
+          carg_539_igm: %{nome: "MOGORO_539", numero: 3},
+          carg_539_legenda: %{nome: "MOGORO_539", numero: 4}
+        },
+        {:guest, :esri_lab} => %{lsgv1: %{nome: "Live_Stream_Gauges_v1", numero: 0}}
+      }
+  """
+  @callback features_usr_srv :: map()
 
   defmacro __using__(_opts) do
     quote do
       @behaviour unquote(__MODULE__)
       import unquote(__MODULE__)
 
-      @doc """
-      Da sovrascrivere nell'applicazione client:
-
-          def app_name, do: :carg_539
-      """
       def app_name, do: :my_app_name
 
       defp downcase(mappa), do: Enum.map(mappa, fn {k, v} -> {String.downcase(k), v} end)
 
-      @doc """
-      Estrae da config/*.exs per l'applicazione corrente(appname()) `:features_usr_srv`
-          %{
-            {:alai, :arpas} => %{
-              carg_539_campioni: %{nome: "MOGORO_539", numero: 1},
-              carg_539_igm: %{nome: "MOGORO_539", numero: 3},
-              carg_539_legenda: %{nome: "MOGORO_539", numero: 4}
-            },
-            {:guest, :esri_lab} => %{lsgv1: %{nome: "Live_Stream_Gauges_v1", numero: 0}}
-          }
-      """
       def features_usr_srv, do: Env.app(app_name())[:features_usr_srv]
 
       # passo 1a in "get_features_desc"
@@ -55,8 +59,8 @@ defmodule Eegis.AgolApp do
         Enum.map(features, &assembla_feature_usrsrv(&1, usr_srv))
       end
 
-     # passo 2 in "get_features_desc"
-     defp valori_auth(desc_feature) do
+      # passo 2 in "get_features_desc"
+      defp valori_auth(desc_feature) do
         {usr_srv, dato} = AgolAuth.get_token(desc_feature[:usr_srv]) |> hd
         fs = Map.get(dato, :feature_srv)
         dtoken = Map.get(dato, :token)
