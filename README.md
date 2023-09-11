@@ -10,7 +10,7 @@ by adding `eegis` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:eegis, "~> 0.1.12"}
+    {:eegis, "~> 0.1.13"}
   ]
 end
 ```

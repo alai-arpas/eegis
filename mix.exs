@@ -1,7 +1,7 @@
 defmodule Eegis.MixProject do
   use Mix.Project
 
-  @version "0.1.12"
+  @version "0.1.13"
 
   def project do
     [
@@ -65,7 +65,7 @@ defmodule Eegis.MixProject do
 
   defp aliases do
     [
-      wv: ["eegis -b"]
+      awv: ["eegis -awv"]
     ]
   end
 end
