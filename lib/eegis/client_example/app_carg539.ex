@@ -1,4 +1,9 @@
 defmodule Eegis.ClientExample.AppCarg539 do
+  @moduledoc """
+  Applicazione di esempio Agol(Arcgis On Line) che sfrutta le
+  funzioni definite in Eegis.AgolApp
+  """
+
   use Eegis.AgolApp
 
   def app_name, do: :carg_539
@@ -6,15 +11,27 @@ defmodule Eegis.ClientExample.AppCarg539 do
   ###############  LEGENDA #####################
   @leg_campi_base ~w(OBJECTID,UC_LEGE,SIGLA)
 
+  def outFields_legenda, do: %{"outFields=" => Enum.join(@leg_campi_base, ",")}
 
-  def outFields_legenda do
-    %{"outFields=" => Enum.join(@leg_campi_base, ",")}
-  end
+  def get_legenda_by_objectid(objectid), do: get_legenda_by(:objectid, objectid)
 
-  defp agol_legenda, do: get_a_feature(:carg_539_legenda, outFields_legenda())
+  def get_legenda_by_uclege(uc_lege), do: get_legenda_by(:uc_lege, uc_lege)
 
-  defp agol_legenda_query(campo, valore) do
-    {c, v} =
+  def get_legenda_by_sigla(sigla), do: get_legenda_by(:sigla, sigla)
+
+  @doc """
+  Funzione utilizzata da
+      get_legenda_by_objectid
+      get_legenda_by_uclege
+      get_legenda_by_sigla
+
+  genera la clausula "where"
+      attrs = %{"where=" => nome_campo = il_valore}
+  e usa la funzione get_a_feature definita in Eegis.AgolApp
+      {records, _fields} = get_a_feature(:carg_539_legenda, attrs)
+  """
+  def get_legenda_by(campo, valore) do
+    {nome_campo, il_valore} =
       case campo do
         :objectid ->
           {"OBJECTID", valore}
@@ -26,38 +43,32 @@ defmodule Eegis.ClientExample.AppCarg539 do
           {"SIGLA", "'#{valore}'"}
       end
 
-    attrs = %{"where=" => "#{c}=#{v}"}
-    IO.inspect(attrs, label: "attributi")
+    attrs = %{"where=" => "#{nome_campo}=#{il_valore}"}
     {records, _fields} = get_a_feature(:carg_539_legenda, attrs)
     records
   end
 
-  def list_formazioni() do
-    {attrs, _fields} = agol_legenda()
+  @doc """
+  Estrae le foramzioni della legenda da Agol(Arcgis On Line)
+  per la feature :carg_539_legenda e i campi definiti in outFields_legenda()
+  """
+  def list_formazioni_legenda() do
+    {attrs, _fields} = get_a_feature(:carg_539_legenda, outFields_legenda())
 
     attrs
     |> Enum.map(fn mappa -> downcase(mappa) end)
     |> Enum.map(&Map.new/1)
   end
 
+  @doc """
+  Crea un record per la legenda. (Ancora da implementare)
+  """
   def crea_legenda(attrs \\ %{}) do
     campi =
       Map.keys(attrs)
       |> Enum.join(",")
 
     "CREA legenda #{campi}"
-  end
-
-  def get_legenda_by_objectid(objectid) do
-    agol_legenda_query(:objectid, objectid)
-  end
-
-  def get_legenda_by_uclege(uc_lege) do
-    agol_legenda_query(:uc_lege, uc_lege)
-  end
-
-  def get_legenda_by_sigla(sigla) do
-    agol_legenda_query(:sigla, sigla)
   end
 
   def update_legenda(features) do
@@ -67,21 +78,10 @@ defmodule Eegis.ClientExample.AppCarg539 do
     update_features(:carg_539_legenda, features)
   end
 
+  @doc """
+  Cancella un record per objectid. (Ancora da implementare)
+  """
   def delete_legenda(:agol, objectid) do
     "Delete legenda #{objectid}"
-  end
-
-  ###############  CAMPIONI #####################
-  @camp_campi_base ~w(OBJECTID_1,SIGL_CAM)
-
-  def outFields_campioni do
-    %{"outFields=" => Enum.join(@camp_campi_base, ",")}
-  end
-
-  def agol_campioni, do: get_a_feature(:carg_539_campioni, outFields_campioni())
-
-  def agol_campioni_query(sigl_cam) do
-    attrs = %{"where=" => "SIGL_CAM='#{sigl_cam}'"}
-    get_a_feature(:carg_539_campioni, attrs)
   end
 end

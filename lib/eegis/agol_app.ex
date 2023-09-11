@@ -17,6 +17,8 @@ defmodule Eegis.AgolApp do
   alias Eegis.AgolAutorizza, as: AgolAuth
   alias Eegis.HttpRequest, as: HttpReq
 
+  @type nome_feature :: atom()
+
   @doc """
   Da sovrascrivere nell'applicazione client:
       def app_name, do: :carg_539
@@ -26,17 +28,19 @@ defmodule Eegis.AgolApp do
   @callback app_name :: atom()
 
   @doc """
-  Estrae da config/*.exs per l'applicazione corrente(appname()) `:features_usr_srv`
-      %{
-        {:alai, :arpas} => %{
-          carg_539_campioni: %{nome: "MOGORO_539", numero: 1},
-          carg_539_igm: %{nome: "MOGORO_539", numero: 3},
-          carg_539_legenda: %{nome: "MOGORO_539", numero: 4}
-        },
-        {:guest, :esri_lab} => %{lsgv1: %{nome: "Live_Stream_Gauges_v1", numero: 0}}
-      }
+  Vedi applicazione esempio in `Eegis.ClientExample.AppCarg539.features_usr_srv`
   """
   @callback features_usr_srv :: map()
+
+  @doc """
+  Vedi applicazione esempio in `Eegis.ClientExample.AppCarg539.get_features_desc`
+  """
+  @callback get_features_desc :: map()
+
+  @doc """
+  Vedi applicazione esempio in `Eegis.ClientExample.AppCarg539.get_a_feature_desc`
+  """
+  @callback get_a_feature_desc(nome_feature) :: map()
 
   defmacro __using__(_opts) do
     quote do
@@ -47,6 +51,17 @@ defmodule Eegis.AgolApp do
 
       defp downcase(mappa), do: Enum.map(mappa, fn {k, v} -> {String.downcase(k), v} end)
 
+      @doc """
+      Estrae da config/*.exs per l'applicazione corrente(appname()) `:features_usr_srv`
+          %{
+            {:alai, :arpas} => %{
+              carg_539_campioni: %{nome: "MOGORO_539", numero: 1},
+              carg_539_igm: %{nome: "MOGORO_539", numero: 3},
+              carg_539_legenda: %{nome: "MOGORO_539", numero: 4}
+            },
+            {:guest, :esri_lab} => %{lsgv1: %{nome: "Live_Stream_Gauges_v1", numero: 0}}
+          }
+      """
       def features_usr_srv, do: Env.app(app_name())[:features_usr_srv]
 
       # passo 1a in "get_features_desc"
@@ -77,21 +92,13 @@ defmodule Eegis.AgolApp do
       end
 
       @doc """
-      Per tutte le feature crea una mappa come da esempio:
+      Per tutte le feature crea una chiave:(nome_feature)
+      porzione di esempio:
           %{
-            carg_539_campioni: %{
+            carg_539_legenda: %{
               feature_srv: "https://servicesX.arcgis.com/yyyyyyyyyyyyyyyy/",
               nome: "MOGORO_539",
-              numero: 1,
-              usr_srv: {:alai, :arpas},
-              attrs: %{
-                "token=" => "molti caratteri 1YyrqfW4A.."
-              }
-            },
-            carg_539_igm: %{
-              feature_srv: "https://servicesX.arcgis.com/yyyyyyyyyyyyyyyy/",
-              nome: "MOGORO_539",
-              numero: 3,
+              numero: 2,
               usr_srv: {:alai, :arpas},
               attrs: %{
                 "token=" => "molti caratteri 1YyrqfW4A.."
@@ -107,10 +114,15 @@ defmodule Eegis.AgolApp do
           |> Enum.into(%{})
       end
 
-      def get_a_feature_desc(atom_name) do
-        Map.get(get_features_desc(), atom_name)
-      end
+      @doc """
+      Usa `get_features_desc` per estrarre una "Singola" feature
 
+      """
+      def get_a_feature_desc(atom_name), do: Map.get(get_features_desc(), atom_name)
+
+      @doc """
+      Unisce l'ulr con i parametri &stringa_1=valore_1&stringa_2=valore_2
+      """
       def url_string(url, params) do
         {:ok, uri} = URI.new(url)
 
@@ -123,7 +135,10 @@ defmodule Eegis.AgolApp do
         |> URI.to_string()
       end
 
-      def update_features(atom_name, features \\ %{}) do
+      @doc """
+      Aggiorna una lista di features
+      """
+      def update_features(atom_name, features \\ [%{}]) do
         desc = get_a_feature_desc(atom_name)
 
         params = %{"f" => "pjson"}
@@ -139,6 +154,11 @@ defmodule Eegis.AgolApp do
         HttpReq.post_request(url, params, features)
       end
 
+      @doc """
+      Ottine una lista di record per una specifica features
+      restiutendo:
+          {solo_attributi, fields}
+      """
       def get_a_feature(atom_name, attrs \\ %{}) do
         default = %{"outFields=" => "*", "f=" => "pjson", "where=" => "1=1"}
 
@@ -165,6 +185,9 @@ defmodule Eegis.AgolApp do
         {solo_attributi, fields}
       end
 
+      @doc """
+      Get user servizo
+      """
       def get_usr_srv() do
         features_usr_srv()
         |> Map.keys()
