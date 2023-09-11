@@ -8,6 +8,7 @@ import Config
 app_id = System.get_env("ESRI_APP_id") || ""
 app_secret = System.get_env("ESRI_APP_secret") || ""
 fs = System.get_env("ESRI_ARPAS_SERVICES") || ""
+esri_agol_noi = System.get_env("ESRI_AGOL_NOI") || ""
 
 # esempi di esri - potrebbe non funzionare
 esri_feature_services_examples = "https://services9.arcgis.com/RHVPKKiFTONKtxq3/"
@@ -19,6 +20,7 @@ non_logged_user = %{feature_srv: esri_feature_services_examples, public: true}
 
 config :eegis,
   da_config_app: "eegis_dev.exs",
+  esri_agol: %{noi: esri_agol_noi},
   apps: %{
     carg_539: %{
       features_usr_srv: %{
