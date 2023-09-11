@@ -6,6 +6,7 @@ defmodule Eegis.ClientExample.AppCarg539 do
   ###############  LEGENDA #####################
   @leg_campi_base ~w(OBJECTID,UC_LEGE,SIGLA)
 
+
   def outFields_legenda do
     %{"outFields=" => Enum.join(@leg_campi_base, ",")}
   end
@@ -16,7 +17,7 @@ defmodule Eegis.ClientExample.AppCarg539 do
     {c, v} =
       case campo do
         :objectid ->
-          {"OBJECTID_1", valore}
+          {"OBJECTID", valore}
 
         :uc_lege ->
           {"UC_LEGE", valore}
