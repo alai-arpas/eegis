@@ -17,4 +17,14 @@ defmodule Eegis.Env do
 
   def apps_name, do: all()[:apps] |> Map.keys()
   def user_services_name, do: all()[:user_services] |> Map.keys()
+
+  @doc """
+  Definisce il portale principale della nostra societa
+  da usare per aggiungere contenuti
+  """
+
+  def esri_portal_noi do
+    all()[:esri_agol]
+    |> Map.get(:noi)
+  end
 end

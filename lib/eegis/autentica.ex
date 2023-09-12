@@ -33,7 +33,7 @@ defmodule Eegis.Autentica do
     Map.put(my_token, "scade", scadenza)
   end
 
-  defp http_req_get_token(id, secret, expiration \\ "21600") do
+  def http_req_get_token(id, secret, expiration \\ "21600") do
     url = Application.get_env(:eegis, :url_esri_token)
 
     payload =
