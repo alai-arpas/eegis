@@ -1,4 +1,4 @@
-defmodule Eegis.ClientExample.AppCarg539 do
+defmodule Eegis.ClientExample.AppCarg539Legenda do
   @moduledoc """
   Applicazione di esempio Agol(Arcgis On Line) che sfrutta le
   funzioni definite in Eegis.AgolApp
