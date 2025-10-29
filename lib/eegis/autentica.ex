@@ -26,6 +26,7 @@ defmodule Eegis.Autentica do
   end
 
   defp completa(my_token) do
+    inspect(my_token)
     adesso = DateTime.now!("Etc/UTC")
     finisce = my_token["expires_in"]
     scadenza = DateTime.add(adesso, finisce, :second)
